@@ -1,0 +1,18 @@
+---
+// A simple page that shows one Markdown file from the repo (pages/about.md).
+import { getCollection, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { byFile } from '../lib/site';
+
+interface Props { file: string; title: string; active: string }
+const { file, title, active } = Astro.props;
+const entry = byFile(await getCollection('pages'), file);
+const { Content } = entry ? await render(entry) : { Content: null };
+---
+<Base title={title} active={active}>
+  <div class="page">
+    <article class="card prose show-h1">
+      {Content ? <Content /> : <><h1>{title}</h1><p>Add <code>{file}</code> to the repo to fill this page.</p></>}
+    </article>
+  </div>
+</Base>

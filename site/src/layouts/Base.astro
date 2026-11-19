@@ -1,0 +1,72 @@
+---
+// The app frame around every page: sidebar on the left, top bar (search, text size, theme), then the page.
+import '../styles/global.css';
+import Sidebar from '../components/Sidebar.astro';
+import Icon from '../components/Icon.astro';
+import { url, getProfile } from '../lib/site';
+
+interface Props { title: string; description?: string; active?: string; currentTopic?: string; pageKey?: string }
+const { title, description = 'A learning hub for identity and access management, governance and assurance.', active, currentTopic, pageKey } = Astro.props;
+const profile = getProfile();
+const pageTitle = title === 'Home' ? `Learn IAM · ${profile.name ?? ''}` : `${title} · Learn IAM`;
+---
+<!doctype html>
+<html lang="en-AU">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <link rel="icon" type="image/svg+xml" href={url('favicon.svg')} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <script is:inline>
+      // Apply the reader's saved theme and text size before the page draws (no flash).
+      try {
+        var s = JSON.parse(localStorage.getItem('learn-iam:prefs') || '{}');
+        if (s.theme) document.documentElement.dataset.theme = s.theme;
+        if (s.text) document.documentElement.dataset.text = s.text;
+      } catch (e) {}
+    </script>
+  </head>
+  <body data-base={url('')} data-page-key={pageKey}>
+    <a class="skip" href="#main">Skip to content</a>
+    <div class="reading-bar" aria-hidden="true"><span></span></div>
+    <div class="app">
+      <Sidebar active={active} currentTopic={currentTopic} />
+      <div class="scrim" data-close-drawer></div>
+      <div class="workspace">
+        <header class="topbar">
+          <button class="icon-btn only-mobile" type="button" data-open-drawer aria-label="Open menu" aria-controls="sidebar"><Icon name="menu" /></button>
+          <div class="search" role="search">
+            <Icon name="search" size={18} />
+            <input id="search" type="search" placeholder="Search topics and headings…" autocomplete="off" aria-label="Search" aria-controls="search-results" />
+            <kbd>/</kbd>
+            <div class="search-results" id="search-results" role="listbox" hidden></div>
+          </div>
+          <div class="tools">
+            <button class="icon-btn" type="button" data-text-size aria-label="Change text size" title="Text size"><Icon name="a-large-small" /></button>
+            <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch light or dark mode" title="Light / dark">
+              <span class="when-light"><Icon name="moon" /></span><span class="when-dark"><Icon name="sun" /></span>
+            </button>
+          </div>
+        </header>
+        <main id="main"><slot /></main>
+        <footer class="footer">
+          <span>Learn IAM · {profile.name}</span>
+          <span class="footer-links">
+            {profile.linkedin && <a href={profile.linkedin} target="_blank" rel="noopener">LinkedIn</a>}
+            <a href="https://github.com/ImArchanaSH/Learn_IAM" target="_blank" rel="noopener">GitHub</a>
+          </span>
+        </footer>
+      </div>
+    </div>
+    <button class="to-top" type="button" aria-label="Back to top" hidden><Icon name="arrow-up" /></button>
+    <div class="toast" role="status" aria-live="polite" hidden></div>
+    <script>
+      import '../lib/interactive';
+    </script>
+  </body>
+</html>

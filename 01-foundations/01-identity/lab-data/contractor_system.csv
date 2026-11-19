@@ -1,0 +1,5 @@
+contractor_id,given_name,family_name,agency,department,sponsor_employee_id,engagement_status,start_date,end_date
+C2001,Ben,Foster,TechStaff Pty Ltd,Information Technology,E1002,Active,2026-03-02,2027-02-26
+C2005,Mei,Chen,CloudPro Consulting,Information Technology,E1002,Ended,2025-09-01,2026-06-30
+C2008,Kai,Morgan,FinTemp Recruitment,Finance,E1020,Active,2026-05-04,
+C2012,Jordan,Price,CloudPro Consulting,Information Technology,E1011,Ended,2026-01-12,2026-09-30

@@ -1,0 +1,22 @@
+{
+  "name": "learn-iam-site",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Website for the Learn_IAM portfolio. Reads the Markdown notes from the repo and builds a static site.",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/markdown-remark": "^7.3.9",
+    "astro": "^7.4.12",
+    "lucide-static": "^1.74.0",
+    "mermaid": "^12.3.0",
+    "yaml": "^2.9.1"
+  },
+  "engines": {
+    "node": ">=22.23.4"
+  }
+}

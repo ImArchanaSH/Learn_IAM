@@ -1,0 +1,12 @@
+employee_id,given_name,family_name,department,job_title,manager_id,employment_status,start_date,end_date
+E1001,Sarah,Mitchell,Executive,Managing Director,,Active,2015-02-02,
+E1002,Daniel,Nguyen,Information Technology,IT and Security Manager,E1001,Active,2019-05-13,
+E1004,James,Wilson,Finance,Finance Director,E1001,Active,2016-03-07,
+E1011,Tom,Harris,Information Technology,Systems Administrator,E1002,Active,2022-06-06,
+E1020,Ram,Kumar,Finance,Finance Manager,E1004,Active,2020-04-14,
+E1022,Lucas,Martin,Finance,Payroll Officer,E1020,Active,2021-07-19,
+E1050,Isla,Scott,Customer Service,Customer Service Manager,E1001,Active,2019-06-24,
+E1043,Ethan,Young,Customer Service,Customer Service Officer,E1050,On leave,2022-05-09,
+E1053,Oscar,Hall,Customer Service,Customer Service Officer,E1050,Active,2026-11-10,
+E1047,Ravi,Patel,Information Technology,Systems Administrator,E1002,Terminated,2019-11-11,2026-10-31
+E1102,Mei,Chen,Information Technology,Cloud Engineer,E1002,Active,2026-07-01,

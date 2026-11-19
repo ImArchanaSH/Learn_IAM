@@ -1,0 +1,18 @@
+# "Study companions" table on the Home page. Add, remove or reorder freely.
+# type: Book | Guide | Labs | Standard | Exam
+- name: IDPro Body of Knowledge
+  type: Guide
+  use: Free reading that matches each topic
+  url: https://idpro.org/body-of-knowledge/
+- name: CIDPRO objectives and topics
+  type: Exam
+  use: The checklist each topic maps to
+  url: https://idpro.org/wp-content/uploads/2021/06/CIDPRO-Objectives-and-Topics.pdf
+- name: Awesome IAM Labs – Kamran Arif
+  type: Labs
+  use: How labs are framed and run
+  url: https://blog.ansari.solutions/
+- name: Identity and Access Management Exam Prep Guide – Abbas Kudrati
+  type: Book
+  use: Chapters read alongside each topic
+  url: ""

@@ -1,0 +1,26 @@
+user_principal_name,display_name,account_type,employee_id,department,job_title,manager_upn,owner_or_sponsor_upn,date_of_birth,account_enabled,created_date,last_sign_in,auth_methods,description
+sarah.mitchell@xyz.com.au,Sarah Mitchell,Member,E1001,Executive,Managing Director,,,1972-04-18,TRUE,2015-01-30,2026-11-14,Password + Authenticator app,
+daniel.nguyen@xyz.com.au,Daniel Nguyen,Member,E1002,Information Technology,IT and Security Manager,sarah.mitchell@xyz.com.au,,1980-09-02,TRUE,2019-05-10,2026-11-14,Passkey,
+james.wilson@xyz.com.au,James Wilson,Member,E1004,Finance,Finance Director,sarah.mitchell@xyz.com.au,,1975-06-30,TRUE,2016-03-04,2026-11-14,Password + Authenticator app,
+tom.harris@xyz.com.au,Tom Harris,Member,E1011,Information Technology,Systems Administrator,daniel.nguyen@xyz.com.au,,1991-07-14,TRUE,2022-06-03,2026-11-14,Password + Authenticator app,
+adm-tom.harris@xyz.com.au,ADM Tom Harris,Member,E1011,Information Technology,Systems Administrator,daniel.nguyen@xyz.com.au,tom.harris@xyz.com.au,,TRUE,2022-06-10,2026-11-12,FIDO2 security key,Admin account
+ram.kumar@xyz.com.au,Ram Kumar,Member,E1020,Human Resources,HR Manager,sarah.mitchell@xyz.com.au,,1985-10-22,TRUE,2020-04-10,2026-11-14,Password + Authenticator app,
+lucas.martin@xyz.com.au,Lucas Martin,Member,E1022,Finance,Payroll Officer,,,1990-05-05,TRUE,2021-07-16,2026-11-13,Password + SMS code,
+isla.scott@xyz.com.au,Isla Scott,Member,E1050,Customer Service,Customer Service Manager,sarah.mitchell@xyz.com.au,,1984-03-26,TRUE,2019-06-21,2026-11-14,Password + Authenticator app,
+ethan.young@xyz.com.au,Ethan Young,Member,E1043,Customer Service,Customer Service Officer,isla.scott@xyz.com.au,,1993-04-03,TRUE,2022-05-06,2026-08-02,Password + Authenticator app,
+oscar.hall@xyz.com.au,Oscar Hall,Member,E1053,Customer Service,Customer Service Officer,isla.scott@xyz.com.au,,2002-05-15,TRUE,2026-11-07,,Not yet registered,
+ravi.patel@xyz.com.au,Ravi Patel,Member,E1047,Information Technology,Systems Administrator,daniel.nguyen@xyz.com.au,,1986-12-01,TRUE,2019-11-08,2026-11-03,Password + Authenticator app,
+adm-ravi.patel@xyz.com.au,ADM Ravi Patel,Member,E1047,Information Technology,Systems Administrator,daniel.nguyen@xyz.com.au,ravi.patel@xyz.com.au,,TRUE,2020-02-03,2026-10-29,FIDO2 security key,Admin account
+mei.chen@xyz.com.au,Mei Chen,Member,E1102,Information Technology,Cloud Engineer,daniel.nguyen@xyz.com.au,,1994-08-08,TRUE,2026-06-29,2026-11-14,Passkey,
+mei.chen.ext@xyz.com.au,Mei Chen (CloudPro),Member,C2005,Information Technology,Contractor - Cloud,daniel.nguyen@xyz.com.au,daniel.nguyen@xyz.com.au,,TRUE,2025-08-29,2026-10-20,Password + Authenticator app,
+ben.foster.ext@xyz.com.au,Ben Foster (TechStaff),Member,C2001,Information Technology,Contractor - Network,daniel.nguyen@xyz.com.au,daniel.nguyen@xyz.com.au,,TRUE,2026-02-27,2026-11-14,Password + Authenticator app,
+kai.morgan.ext@xyz.com.au,Kai Morgan (FinTemp),Member,C2008,Finance,Contractor - Accounts,ram.kumar@xyz.com.au,ram.kumar@xyz.com.au,,TRUE,2026-05-01,2026-11-13,Password + SMS code,
+jordan.price.ext@xyz.com.au,Jordan Price (CloudPro),Member,C2012,Information Technology,Contractor - Cloud,tom.harris@xyz.com.au,tom.harris@xyz.com.au,,TRUE,2026-01-09,2026-10-14,Password + Authenticator app,
+j.wilson@xyz.com.au,J Wilson,Member,,Finance,,,,,TRUE,2018-05-22,2026-04-11,Password only,
+finance.shared@xyz.com.au,Finance Team,Member,,Finance,,,,,TRUE,2017-02-01,2026-11-14,Password only,Shared login for finance team
+svc-backup@xyz.com.au,svc-backup,Member,,Information Technology,,,,,TRUE,2018-09-10,2026-11-15,Password (stored in backup software),Nightly backup job
+svc-payroll-sync@xyz.com.au,svc-payroll-sync,Member,,Finance,,,ravi.patel@xyz.com.au,,TRUE,2020-06-15,2026-11-15,Client secret,Payroll interface to bank
+svc-quarterly-bas@xyz.com.au,svc-quarterly-bas,Member,,Finance,,,james.wilson@xyz.com.au,,TRUE,2024-07-01,2026-09-30,Certificate,"Quarterly BAS lodgement job, runs after each quarter end"
+breakglass-01@xyz.com.au,Emergency Access 01,Member,,Information Technology,,,daniel.nguyen@xyz.com.au,,TRUE,2023-02-14,,Password + FIDO2 security key (kept in safe),Emergency access account. Credentials in safe. Use triggers alert
+agent-helpdesk-assistant@xyz.com.au,Helpdesk AI Assistant,Member,,Information Technology,,,,,TRUE,2026-10-02,2026-11-15,Managed identity (no stored secret),AI agent for password reset triage
+j.smith_supplierco.com.au#EXT#@xyz.onmicrosoft.com,John Smith (SupplierCo),Guest,,,,,,,TRUE,2025-02-18,2026-04-30,Signs in at SupplierCo (external organisation),

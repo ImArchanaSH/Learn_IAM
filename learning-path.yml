@@ -1,0 +1,8 @@
+# The order of topics in the learning path.
+# A topic with "folder" is live and is read from that folder.
+# A topic without "folder" shows as "soon".
+- slug: 01-identity
+  folder: 01-foundations/01-identity
+- title: Authentication and MFA
+- title: Authorisation
+
