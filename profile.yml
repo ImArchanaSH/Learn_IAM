@@ -1,0 +1,10 @@
+# Your details for the Home page, sidebar and footer.
+# Paste your LinkedIn profile address below. Until you do, the LinkedIn button stays hidden.
+name: Archana
+headline: Learning IAM and GRC
+linkedin: ""   # e.g. https://www.linkedin.com/in/your-name/
+github: https://github.com/ImArchanaSH
+
+# Big banner at the top of the Home page
+hero_eyebrow: IAM · GRC · Assurance learning hub
+hero_title: Learn identity and access management, one topic at a time

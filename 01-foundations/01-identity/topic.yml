@@ -1,0 +1,11 @@
+# Topic details shown on the website.
+# status isn't shown on the page; it only fills the progress bar in the sidebar.
+# status: draft | in-progress | complete
+number: "01"
+title: Identity and Identity Systems
+summary: What an identity is, how digital identity works, and the six components of an identity system.
+week: 1
+status: in-progress
+# Shown on the topic card: a short tag and an icon name from https://lucide.dev/icons
+tag: Foundations
+icon: fingerprint

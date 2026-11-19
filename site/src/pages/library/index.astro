@@ -1,0 +1,49 @@
+---
+// Library: every topic with its three sections and the reader's progress.
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import { getLearningPath } from '../../lib/site';
+const topics = await getLearningPath();
+---
+<Base title="Library" active="library">
+  <div class="page">
+    <header class="page-head">
+      <p class="eyebrow">Library</p>
+      <h1>All topics</h1>
+      <p class="muted">Each topic has three parts. Notes explain how it works, governance covers what can go wrong and how it's controlled, and labs work through real scenarios.</p>
+    </header>
+    <div class="lib-list">
+      {topics.map((t) =>
+        t.live ? (
+          <section class="card lib-item">
+            <div class="lib-head">
+              <span class="topic-banner-icon" aria-hidden="true"><Icon name={t.icon} size={26} /></span>
+              <div class="lib-title">
+                <p class="eyebrow">Topic {t.number}{t.tag ? ` · ${t.tag}` : ''} · ~{t.minutes} min</p>
+                <h2>{t.title}</h2>
+                {t.summary && <p class="muted">{t.summary}</p>}
+              </div>
+              <span class="mini-ring lg" data-topic-ring={t.slug} data-sections={t.sections.map((s) => s.key).join(',')} style="--p:0"></span>
+            </div>
+            <div class="glance">
+              {t.sections.map((s) => (
+                <a class="glance-card" href={s.href}>
+                  <span class={`glance-icon k-${s.key}`}><Icon name={s.icon} /></span>
+                  <span class="glance-text"><small data-status={s.progressKey}>Not started · {s.minutes} min</small><b>{s.label}</b></span>
+                  <span class="mini-ring" data-ring={s.progressKey} style="--p:0"></span>
+                </a>
+              ))}
+            </div>
+          </section>
+        ) : (
+          <section class="card lib-item soon">
+            <div class="lib-head">
+              <span class="topic-banner-icon muted-icon" aria-hidden="true"><Icon name="lock" size={22} /></span>
+              <div class="lib-title"><p class="eyebrow">Topic {t.number} · coming soon</p><h2>{t.title}</h2></div>
+            </div>
+          </section>
+        ),
+      )}
+    </div>
+  </div>
+</Base>

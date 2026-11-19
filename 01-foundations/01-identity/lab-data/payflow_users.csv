@@ -1,0 +1,8 @@
+app_user_id,username,display_name,sign_in_method,app_role,status,last_login
+P001,ram.kumar@xyz.com.au,Ram Kumar,Entra ID single sign-on,Pay run approver,Active,2026-11-12
+P002,lucas.martin@xyz.com.au,Lucas Martin,Entra ID single sign-on,Payroll processor,Active,2026-11-13
+P003,james.wilson@xyz.com.au,James Wilson,Entra ID single sign-on,Finance administrator,Active,2026-11-10
+P004,jwilson,J Wilson,PayFlow password,Pay run approver,Active,2026-04-11
+P005,finance,Finance Team,PayFlow password,Payroll processor,Active,2026-11-14
+P006,svc-payroll-sync@xyz.com.au,Bank file export,API client secret,Bank file export,Active,2026-11-15
+P007,kai.morgan.ext@xyz.com.au,Kai Morgan,Entra ID single sign-on,Read only,Active,2026-11-11
