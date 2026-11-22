@@ -1,5 +1,5 @@
 
-## 1. What is identity governance?
+## What is identity governance?
 
 Identity governance is the set of principles, policies, responsibilities and oversight that guide how an organisation manages identities and the information associated with them.
 
@@ -12,7 +12,7 @@ It helps an organisation answer three fundamental questions:
 Identity governance is not a technology on its own. It establishes the expectations and accountability that identity management processes and technologies need to support.
 
 
-## 2. Why does identity governance matter?
+## Why does identity governance matter?
 
 Identity systems are often used as the foundation for access decisions. If the underlying identity information is inaccurate, incomplete or poorly managed, those decisions may also be unreliable.
 
@@ -27,7 +27,7 @@ These are not simply technical problems. They raise questions about ownership, a
 
 Good identity governance helps an organisation establish who is responsible for identity information, what information should be maintained and how identity-related risks should be managed.
 
-## 3. How does it work?
+## How does it work?
 
 Governance isn't a one-off project. It runs as a cycle:
 
@@ -40,7 +40,7 @@ flowchart LR
   E --> A
 ```
 
-## 4. Building blocks
+## Building blocks
 
 | Building block | What it covers |
 | --- | --- |
@@ -51,11 +51,11 @@ flowchart LR
 | Evidence and oversight | How management knows the arrangements exist and are working |
 
 
-## 5. What needs to be governed?
+## What needs to be governed?
 
 The four areas below provide the foundation for governing identities within an organisation.
 
-### 5.1 Identity ownership
+### Identity ownership
 
 Every identity should have a clear purpose and appropriate accountability.
 
@@ -70,7 +70,7 @@ For non-human identities, such as service accounts and application identities, t
 
 An identity without a known owner or purpose can remain in an environment without anyone questioning whether it is still needed.
 
-### 5.2 Identity data quality
+### Identity data quality
 
 Identity systems rely on information about the entities they represent.
 
@@ -100,7 +100,7 @@ An identity directory may store this information or receive it from another syst
 
 The organisation should establish which source is trusted for which information. A source can be authoritative for one attribute and not another: HR is usually authoritative for department and employment status, but not for a person's email address, which IT assigns.
 
-### 5.3 Identity accountability
+### Identity accountability
 
 Knowing that an identity exists is not enough. The organisation also needs to establish who is accountable for managing it.
 
@@ -114,7 +114,7 @@ For example:
 
 Responsibilities should be clear so that identity-related issues do not fall between teams.
 
-### 5.4 Personal information and privacy
+### Personal information and privacy
 
 Identity systems can hold personal information such as names, contact details, employment information and other attributes.
 
@@ -138,7 +138,7 @@ The specific obligations depend on whether the organisation is covered by the Ac
 
 These are legal obligations for organisations covered by the Act. Most of the rest of this page is good practice, which organisations adopt by choice or because a standard such as ISO/IEC 27001 or a contract requires it.
 
-## 6. Who is responsible?
+## Who is responsible?
 
 Identity governance involves several parts of an organisation. It is not solely an IT responsibility.
 
@@ -157,7 +157,7 @@ The exact responsibilities depend on the organisation's size, structure and oper
 
 A useful distinction is that **IT may operate the identity technology, but the business must provide the context and accountability needed to make appropriate identity decisions.**
 
-## 7. Foundational governance principles
+## Foundational governance principles
 
 The following principles provide a starting point for governing identity systems.
 
@@ -172,7 +172,7 @@ The following principles provide a starting point for governing identity systems
 
 These principles will become more specific as we explore identity lifecycle management, authentication, authorisation and privileged access.
 
-## 8. Relevant policies
+## Relevant policies
 
 Identity governance expectations are written down in a small set of documents. Each one sets out a different part of what the organisation expects for its identities:
 
@@ -182,7 +182,7 @@ Identity governance expectations are written down in a small set of documents. E
 | Identity management standard | The identity attributes that must be recorded, and the authoritative source for each |
 | Privacy policy | Why personal information is collected, and how it is used and protected |
 
-## 9. What can go wrong?
+## What can go wrong?
 
 Poor identity governance can create risks even when the organisation has implemented identity technology.
 
@@ -196,7 +196,7 @@ Poor identity governance can create risks even when the organisation has impleme
 
 These are initial risk examples. The detailed risks and controls associated with each IAM component will be examined in its relevant topic.
 
-## 10. What good looks like
+## What good looks like
 
 For each area, this is what an organisation should have in place, and what would show it:
 
@@ -212,11 +212,13 @@ Having a policy or register alone does not prove that it is accurate or consiste
 
 ---
 
-## References and further reading
+## References
 
-- ISO/IEC 24760-1:2019 (Edition 2), with Amendment 1:2023 -  *A framework for identity management, Part 1: Terminology and concepts*.
-- ISO/IEC 27001:2022 -  Information security management systems, particularly Annex A controls 5.16 (Identity management) and 5.18 (Access rights).
-- ISO/IEC 27002:2022 -  Guidance on information security controls.
-- *Privacy Act 1988* (Cth), Schedule 1 -  Australian Privacy Principles.
-- Office of the Australian Information Commissioner (OAIC) -  *Australian Privacy Principles guidelines*. https://www.oaic.gov.au/privacy/australian-privacy-principles/australian-privacy-principles-guidelines
-- IDPro -  *Body of Knowledge*, Identity Management Fundamentals. https://idpro.org/body-of-knowledge/
+## References
+
+- ISO/IEC 24760-1:2019 (Edition 2) with Amendment 1:2023, *IT Security and Privacy – A framework for identity management – Part 1: Terminology and concepts*. Free from [ISO Publicly Available Standards](https://standards.iso.org/ittf/PubliclyAvailableStandards/).
+- ISO/IEC 27001:2022, *Information security, cybersecurity and privacy protection – Information security management systems – Requirements*. Annex A controls 5.16 (Identity management) and 5.18 (Access rights).
+- ISO/IEC 27002:2022, *Information security, cybersecurity and privacy protection – Information security controls*. Guidance for each Annex A control.
+- *Privacy Act 1988* (Cth), Schedule 1, Australian Privacy Principles. [OAIC – Read the Australian Privacy Principles](https://www.oaic.gov.au/privacy/australian-privacy-principles/read-the-australian-privacy-principles)
+- Office of the Australian Information Commissioner (OAIC), *Australian Privacy Principles guidelines* (updated May 2026). [OAIC – APP guidelines](https://www.oaic.gov.au/privacy/australian-privacy-principles/australian-privacy-principles-guidelines)
+- IDPro, *Body of Knowledge*, Identity Management Fundamentals. [IDPro Body of Knowledge](https://idpro.org/body-of-knowledge/)
