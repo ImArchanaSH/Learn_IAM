@@ -10,10 +10,10 @@ export async function GET() {
       const entry = byFile(entries, `${t.folder}/${s.key}.md`)!;
       const { headings } = await render(entry);
       items.push({
-        topic: `Topic ${t.number}: ${t.title}`,
+        topic: t.title,
         section: s.label,
         href: s.href,
-        headings: headings.filter((h) => h.depth <= 3 && !/^topic \d+:/i.test(h.text)).map((h) => ({ text: h.text, slug: h.slug })),
+        headings: headings.filter((h) => h.depth <= 3 && !/^topic \d+\s*:/i.test(h.text)).map((h) => ({ text: h.text, slug: h.slug })),
       });
     }
   }

@@ -1,5 +1,7 @@
 # Topic details shown on the website.
-# status isn't shown on the page; it only fills the progress bar in the sidebar.
+# status and week aren't shown on the site.
+# updated: the "Updated" date is worked out from the last git commit to this folder.
+#   To set it yourself, add a line like:  updated: 2026-11-22
 # status: draft | in-progress | complete
 number: "01"
 title: Identity and Identity Systems

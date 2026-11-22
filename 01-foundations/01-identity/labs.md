@@ -40,11 +40,11 @@ The CISO asks:
 **Scope:** this lab is about how identities are represented and who is accountable for them.
 ---
 
-## Part A -  IAM Analyst perspective
+## Part A – IAM Analyst perspective
 
 *The question this role asks: how is identity represented, and how do the systems connect?*
 
-### Exercise 1: Identify the identities
+### Exercise A1: Identify the identities
 
 **Task:** classify every Entra ID account and PayFlow user: human or non-human, relationship, purpose, and what it represents.
 
@@ -98,7 +98,7 @@ The CISO asks:
 - Three people have more than one account. Tom and Ravi each have a standard and an admin account (one identity, two accounts). Mei has two identities, a contractor one and an employee one, each with its own account (one entity, two identities).
 - PayFlow isn't only a consumer of Entra ID identities. Two of its seven users exist only in PayFlow.
 
-### Exercise 2: Separate the concepts
+### Exercise A2: Separate the concepts
 
 **Task:** For one employee, one non-human identity and the external guest, separate entity, identity, identifier, account and credential.
 
@@ -114,7 +114,7 @@ The CISO asks:
 
 **What I learned from this:** one entity can have several identifiers, and they're different in every system. Ram has three. The only thing joining his HR record to his directory account is `employee_id`. The guest shows that a credential doesn't have to belong to the organisation that grants access.
 
-### Exercise 3: Map the identity systems
+### Exercise A3: Map the identity systems
 
 **Task:** Show where identity information starts, where it's stored, which system is the identity provider, which applications use it, and how information moves.
 
@@ -140,7 +140,7 @@ flowchart TB
 | Which application consumes identity information? | PayFlow, through single sign-on. It also maintains some identities itself, so it acts as a second, smaller identity store |
 | How does information move? | Entirely by hand. HR and contract managers send emails, and the service desk retypes the details into Entra ID. Nothing is automatic, so nothing keeps the copies in step |
 
-### Exercise 4: Trace one person
+### Exercise A4: Trace one person
 
 **Task:** Trace Ram Kumar through Workday, Entra ID and PayFlow.
 
@@ -159,11 +159,11 @@ flowchart TB
 
 ---
 
-## Part B -  GRC Analyst perspective
+## Part B – GRC Analyst perspective
 
 *The question this role asks: who is accountable for each identity, and can its information be trusted?*
 
-### Exercise 1: Ownership
+### Exercise B1: Ownership
 
 **Task:** For each identity, is there an owner or accountable party, is its purpose documented, and who keeps its information correct?
 
@@ -184,7 +184,7 @@ flowchart TB
 
 **Result:** 19 of the 25 Entra ID accounts link to an owner or an authoritative record. Six don't, or their owner has left.No non-human identity has a register or a named person to keep its information correct.
 
-### Exercise 2: Authoritative sources
+### Exercise B2: Authoritative sources
 
 **Task:** Which system should be trusted for each key attribute, where do systems disagree, and who fixes it?
 
@@ -203,7 +203,7 @@ flowchart TB
 
 **Who fixes a disagreement?** No one is named. HR sends a weekly email, the service desk retypes it, and nobody compares the two afterwards. The disagreements are a direct result of the manual process.
 
-### Exercise 3: Basic governance gaps
+### Exercise B3: Basic governance gaps
 
 **Task:** Find gaps in ownership, purpose, consistency, origin and personal information. Say why each matters and what I'd ask.
 

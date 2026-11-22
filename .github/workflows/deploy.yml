@@ -20,6 +20,9 @@ jobs:
     steps:
       - name: Check out the repo
         uses: actions/checkout@v5
+        with:
+          # Full history, so each topic's "Updated" date comes from its last commit
+          fetch-depth: 0
       - name: Build the Astro site in site/
         uses: withastro/action@v6
         with:

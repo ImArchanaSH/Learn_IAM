@@ -1,187 +1,145 @@
 ---
-// Home dashboard: banner with "continue where you left off", the current topic at a glance,
-// all topics as cards with the reader's progress, your About me text, study companions,
-// and a right panel with your profile and the reader's progress.
+// Home, written for a first-time visitor:
+//   1. Who I am and what this is (profile.yml + the short text in pages/home.md), with "Start reading"
+//   2. How each topic works (Notes · Governance · Labs)
+//   3. The learning path at a glance
+//   4. A featured lab (read from the top of the current topic's labs.md)
+// Returning readers also see a "pick up where you left off" strip. It stays hidden until
+// someone has actually started reading, so new visitors never see empty progress.
 import { getCollection, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
-import { byFile, getLearningPath, getProfile, getResources, seriesPercent, url } from '../lib/site';
+import { SECTIONS, byFile, getLearningPath, getProfile, seriesPercent, url } from '../lib/site';
 
 const entry = byFile(await getCollection('pages'), 'pages/home.md');
 const { Content } = entry ? await render(entry) : { Content: null };
 const topics = await getLearningPath();
 const live = topics.filter((t) => t.live);
 const current = live.find((t) => t.status !== 'complete') ?? live[live.length - 1];
+const featured = [...live].reverse().find((t) => t.lab);
+const labHref = featured?.sections.find((s) => s.key === 'labs')?.href;
 const profile = getProfile();
-const resources = getResources();
-const built = seriesPercent(topics);
 const initials = (profile.name ?? 'L').trim().split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
-const allSections = live.flatMap((t) => t.sections.map((s) => ({ ...s, topic: t.number })));
+const built = seriesPercent(topics);
+const PREVIEW = 4;
 ---
 <Base title="Home" active="home">
-  <div class="dash">
-    <div class="dash-main">
-      <!-- Banner -->
-      <section class="banner">
-        <div class="banner-text">
-          <p class="eyebrow">{profile.hero_eyebrow ?? 'Learning hub'}</p>
-          <h1>{profile.hero_title ?? 'Learn identity and access management'}</h1>
-          <div class="banner-actions">
-            {current && (
-              <a class="btn btn-dark" href={current.sections[0]?.href} data-continue>
-                <Icon name="circle-play" /><span data-continue-label>Start Topic {current.number}</span>
-              </a>
-            )}
-            <a class="btn btn-glass" href={url('library/')}><Icon name="library" />Browse library</a>
-          </div>
-          <p class="banner-note" data-continue-note hidden></p>
-        </div>
-        <div class="banner-art" aria-hidden="true">
-          <span class="orb o1"><Icon name="fingerprint" size={34} /></span>
-          <span class="orb o2"><Icon name="key-round" size={28} /></span>
-          <span class="orb o3"><Icon name="shield-check" size={30} /></span>
-          <span class="spark s1"><Icon name="sparkles" size={40} /></span>
-          <span class="spark s2"><Icon name="sparkles" size={26} /></span>
-        </div>
-      </section>
-
-      <!-- Current topic at a glance -->
-      {current && (
-        <section aria-labelledby="glance">
-          <div class="row-head">
-            <h2 id="glance">Topic {current.number} at a glance</h2>
-            <a class="link-more" href={url(`library/${current.slug}/`)}>Open topic <Icon name="arrow-right" size={16} /></a>
-          </div>
-          <div class="glance">
-            {current.sections.map((s) => (
-              <a class="glance-card" href={s.href}>
-                <span class={`glance-icon k-${s.key}`}><Icon name={s.icon} /></span>
-                <span class="glance-text">
-                  <small data-status={s.progressKey}>Not started · {s.minutes} min</small>
-                  <b>{s.label}</b>
-                </span>
-                <span class="mini-ring" data-ring={s.progressKey} style="--p:0"></span>
-              </a>
-            ))}
-          </div>
-        </section>
-      )}
-
-      <!-- All topics -->
-      <section aria-labelledby="path">
-        <div class="row-head">
-          <h2 id="path">Continue learning</h2>
-          <div class="scroller-btns">
-            <button class="icon-btn" type="button" data-scroll="-1" aria-label="Scroll topics left"><Icon name="chevron-left" /></button>
-            <button class="icon-btn" type="button" data-scroll="1" aria-label="Scroll topics right"><Icon name="chevron-right" /></button>
-          </div>
-        </div>
-        <div class="topic-row" data-scroller>
-          {topics.map((t) =>
-            t.live ? (
-              <a class="topic-card" href={url(`library/${t.slug}/`)}>
-                <span class="topic-art" aria-hidden="true">
-                  <Icon name={t.icon} size={46} />
-                  <span class="topic-num">{t.number}</span>
-                </span>
-                <span class="topic-body">
-                  {t.tag && <span class="tag">{t.tag}</span>}
-                  <b class="topic-title">{t.title}</b>
-                  {t.summary && <span class="topic-summary">{t.summary}</span>}
-                  <span class="bar"><span data-topic-bar={t.slug} data-sections={t.sections.map((s) => s.key).join(',')}></span></span>
-                  <span class="topic-meta">
-                    <span><Icon name="layers" size={15} />{t.sections.length} sections</span>
-                    <span><Icon name="timer" size={15} />~{t.minutes} min</span>
-                    <span class="pct" data-topic-pct={t.slug} data-sections={t.sections.map((s) => s.key).join(',')}>0%</span>
-                  </span>
-                </span>
-              </a>
-            ) : (
-              <div class="topic-card soon" aria-label={`${t.title}, coming soon`}>
-                <span class="topic-art" aria-hidden="true"><Icon name="lock" size={36} /><span class="topic-num">{t.number}</span></span>
-                <span class="topic-body">
-                  <span class="tag muted">Coming soon</span>
-                  <b class="topic-title">{t.title}</b>
-                </span>
-              </div>
-            ),
+  <div class="home">
+    <!-- 1. Who and what: banner + profile card -->
+    <div class="hero-row">
+    <section class="banner hero">
+      <div class="banner-text">
+        <p class="eyebrow">{profile.hero_eyebrow ?? 'Learning hub'}</p>
+        <h1>{profile.hero_title ?? 'Learn identity and access management'}</h1>
+        {Content && <div class="hero-intro"><Content /></div>}
+        <div class="banner-actions">
+          {current && (
+            <a class="btn btn-dark" href={current.sections[0]?.href} data-continue>
+              <Icon name="circle-play" /><span data-continue-label>Start reading</span>
+            </a>
           )}
+          <a class="btn btn-glass" href={url('about/')}><Icon name="user" size={18} />About me</a>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- Your own text from pages/home.md -->
-      {Content && (
-        <section class="card prose home-prose">
-          <Content />
-        </section>
-      )}
-
-      <!-- Study companions -->
-      {resources.length > 0 && (
-        <section aria-labelledby="companions">
-          <div class="row-head"><h2 id="companions">Study companions</h2></div>
-          <div class="card table-card">
-            <table class="res-table">
-              <thead><tr><th>Resource</th><th>Type</th><th>Used for</th><th><span class="sr-only">Link</span></th></tr></thead>
-              <tbody>
-                {resources.map((r) => (
-                  <tr>
-                    <td><span class="res-name"><span class="res-icon"><Icon name={r.type === 'Book' ? 'book-marked' : r.type === 'Labs' ? 'flask-conical' : r.type === 'Exam' ? 'graduation-cap' : 'compass'} size={18} /></span>{r.name}</span></td>
-                    <td><span class="tag">{r.type}</span></td>
-                    <td class="muted">{r.use}</td>
-                    <td>{r.url && <a class="pill-link" href={r.url} target="_blank" rel="noopener">Open <Icon name="arrow-up-right" size={14} /></a>}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
-      )}
-    </div>
-
-    <!-- Right panel -->
-    <aside class="dash-side">
-      <section class="card profile">
-        <div class="avatar-ring" style={`--p:${built}`} title={`Series ${built}% built`}>
-          <span class="avatar">{initials}</span>
-        </div>
-        <p class="greet" data-greeting>Welcome</p>
+    <aside class="card profile" aria-label="About the author">
+      <div class="avatar-ring" style={`--p:${built}`} title={`Series ${built}% built`}>
+        <span class="avatar">{initials}</span>
+      </div>
+      <div class="profile-who">
+        <p class="greet" data-greeting>Welcome 👋</p>
         <h2>{profile.name}</h2>
         {profile.headline && <p class="muted">{profile.headline}</p>}
         <p class="built"><Icon name="hammer" size={15} />Series {built}% built</p>
-        <div class="profile-actions">
-          {profile.linkedin && (
-            <a class="btn btn-linkedin" href={profile.linkedin} target="_blank" rel="noopener"><Icon name="linkedin" size={18} />Follow on LinkedIn</a>
-          )}
-          {profile.github && (
-            <a class="btn btn-outline" href={profile.github} target="_blank" rel="noopener"><Icon name="github" size={18} />GitHub</a>
-          )}
-        </div>
-      </section>
-
-      <section class="card my-progress" aria-labelledby="mine">
-        <div class="row-head tight">
-          <h2 id="mine">Your reading</h2>
-          <button class="text-btn" type="button" data-reset-progress title="Clear your saved progress"><Icon name="rotate-ccw" size={15} />Reset</button>
-        </div>
-        <div class="overall">
-          <span class="big-ring" data-overall={allSections.map((s) => s.progressKey).join(',')} style="--p:0"><b>0%</b></span>
-          <p class="muted">of the published topics read. Saved in this browser only, so you can pick up where you left off.</p>
-        </div>
-        <div class="chart" role="img" aria-label="Reading progress for each section">
-          {allSections.map((s) => (
-            <div class="chart-col">
-              <span class="chart-bar"><span class={`k-${s.key}`} data-bar={s.progressKey}></span></span>
-              <small>{s.key === 'governance' ? 'Gov.' : s.label}</small>
-            </div>
-          ))}
-        </div>
-        <ul class="legend">
-          {allSections.map((s) => (
-            <li><span class={`dot k-${s.key}`}></span>Topic {s.topic} {s.label}<b data-pct={s.progressKey}>0%</b></li>
-          ))}
-        </ul>
-      </section>
+      </div>
+      <div class="profile-actions">
+        {profile.linkedin && (
+          <a class="btn btn-linkedin" href={profile.linkedin} target="_blank" rel="noopener"><Icon name="linkedin" size={18} />Follow on LinkedIn</a>
+        )}
+        {profile.github && (
+          <a class="btn btn-outline" href={profile.github} target="_blank" rel="noopener"><Icon name="github" size={18} />GitHub</a>
+        )}
+      </div>
     </aside>
+    </div>
+
+    <!-- Returning readers only (shown by the browser script) -->
+    <section class="card resume" data-resume hidden>
+      <span class="glance-icon k-notes"><Icon name="bookmark" /></span>
+      <div>
+        <small class="muted">Pick up where you left off</small>
+        <b data-resume-title></b>
+      </div>
+      <a class="btn btn-primary sm" href="#" data-resume-link>Continue <Icon name="arrow-right" size={16} /></a>
+    </section>
+
+    <!-- 2. How each topic works -->
+    <section aria-labelledby="how">
+      <div class="row-head"><h2 id="how">How each topic works</h2></div>
+      <div class="how">
+        {SECTIONS.map((s, i) => (
+          <div class={`card how-card k-${s.key}`}>
+            <span class="glance-icon"><Icon name={s.icon} /></span>
+            <b>{s.label}</b>
+            <p class="muted">{s.blurb}</p>
+            {i < SECTIONS.length - 1 && <span class="how-arrow" aria-hidden="true"><Icon name="arrow-right" size={18} /></span>}
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- 3. Learning path preview -->
+    <section aria-labelledby="path">
+      <div class="row-head">
+        <h2 id="path">Learning path</h2>
+        <a class="link-more" href={url('library/')}>See the full path <Icon name="arrow-right" size={16} /></a>
+      </div>
+      <ol class="timeline compact">
+        {topics.slice(0, PREVIEW).map((t, i) =>
+          t.live ? (
+            <li class="tl-item">
+              <span class="tl-step" aria-hidden="true">{i + 1}</span>
+              <a class="card tl-card tl-link" href={t.sections[0]?.href}>
+                <span class="lib-title">
+                  <span class="eyebrow">{[t.tag, `~${t.minutes} min`, t.updated && `Updated ${t.updated}`].filter(Boolean).join(' · ')}</span>
+                  <b class="tl-title">{t.title}</b>
+                  {t.summary && <span class="muted">{t.summary}</span>}
+                </span>
+                <span class="mini-ring lg" data-topic-ring={t.slug} data-sections={t.sections.map((s) => s.key).join(',')} style="--p:0"></span>
+              </a>
+            </li>
+          ) : (
+            <li class="tl-item soon">
+              <span class="tl-step" aria-hidden="true">{i + 1}</span>
+              <div class="tl-soon"><b>{t.title}</b><span class="tag muted">Coming soon</span></div>
+            </li>
+          ),
+        )}
+        {topics.length > PREVIEW && (
+          <li class="tl-item more">
+            <span class="tl-step" aria-hidden="true">…</span>
+            <a class="tl-more" href={url('library/')}>{topics.length - PREVIEW} more topics planned</a>
+          </li>
+        )}
+      </ol>
+    </section>
+
+    <!-- 4. Featured lab -->
+    {featured?.lab && labHref && (
+      <section aria-labelledby="lab">
+        <div class="row-head"><h2 id="lab">Featured lab</h2></div>
+        <a class="card lab-card" href={labHref}>
+          <span class="glance-icon k-labs lab-icon"><Icon name="flask-conical" size={26} /></span>
+          <span class="lab-body">
+            <span class="eyebrow">{featured.title}</span>
+            <b class="lab-title">{featured.lab.title}</b>
+            {featured.lab.question && <span class="lab-quote">“{featured.lab.question}”</span>}
+            {featured.lab.meta && <span class="muted lab-meta">{featured.lab.meta}</span>}
+          </span>
+          <span class="link-more lab-go">Open the lab <Icon name="arrow-right" size={16} /></span>
+        </a>
+      </section>
+    )}
   </div>
 </Base>

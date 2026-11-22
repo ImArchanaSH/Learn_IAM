@@ -169,8 +169,17 @@ function transform(node) {
   });
 }
 
+// The page banner already shows the topic title, so a heading like "## Topic 1: Identity ..."
+// at the very top of a file isn't shown again (it stays in the file for GitHub readers).
+function dropTopicHeading(tree) {
+  const first = tree.children.find((n) => !(n.type === 'html' && /^\s*<!--/.test(n.value)) && n.type !== 'thematicBreak');
+  const text = first?.type === 'heading' ? (first.children || []).map((c) => c.value ?? '').join('') : '';
+  if (first && first.depth <= 2 && /^topic \d+\s*:/i.test(text.trim())) tree.children.splice(tree.children.indexOf(first), 1);
+}
+
 export default function remarkBlocks() {
   return (tree) => {
+    dropTopicHeading(tree);
     transform(tree);
     labFiles(tree);
     wrapPerspectives(tree);

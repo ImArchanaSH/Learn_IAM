@@ -1,5 +1,6 @@
 ---
-// Left sidebar: logo, main pages, the learning path (with each reader's progress), and links.
+// Left sidebar: logo, the three main pages, and the topics of the learning path nested under
+// "Learning path" (each with the reader's progress ring). Topics without a folder show as locked.
 import Icon from './Icon.astro';
 import Logo from './Logo.astro';
 import { getLearningPath, getProfile, hasResume, url } from '../lib/site';
@@ -8,11 +9,6 @@ interface Props { active?: string; currentTopic?: string }
 const { active, currentTopic } = Astro.props;
 const topics = await getLearningPath();
 const profile = getProfile();
-const nav = [
-  { key: 'home', label: 'Home', icon: 'house', href: url('') },
-  { key: 'library', label: 'Library', icon: 'library', href: url('library/') },
-  { key: 'about', label: 'About', icon: 'user', href: url('about/') },
-];
 ---
 <aside class="sidebar" id="sidebar" aria-label="Main">
   <div class="sidebar-top">
@@ -20,38 +16,34 @@ const nav = [
     <button class="icon-btn only-mobile" type="button" data-close-drawer aria-label="Close menu"><Icon name="x" /></button>
   </div>
 
-  <p class="side-label">Overview</p>
-  <nav class="side-nav">
-    {nav.map((n) => (
-      <a href={n.href} aria-current={active === n.key ? 'page' : undefined}><Icon name={n.icon} />{n.label}</a>
-    ))}
-  </nav>
-
-  <p class="side-label">Learning path</p>
-  <ol class="side-path">
-    {topics.map((t) =>
-      t.live ? (
-        <li>
-          <a href={url(`library/${t.slug}/`)} aria-current={currentTopic === t.slug ? 'page' : undefined}>
-            <span class="ring" data-topic-ring={t.slug} data-sections={t.sections.map((s) => s.key).join(',')} style="--p:0">
-              <span>{t.number}</span>
-            </span>
+  <nav class="side-nav" aria-label="Pages">
+    <a href={url('')} aria-current={active === 'home' ? 'page' : undefined}><Icon name="house" />Home</a>
+    <a href={url('library/')} aria-current={active === 'path' ? 'page' : undefined}><Icon name="route" />Learning path</a>
+    <ol class="side-path" aria-label="Topics">
+      {topics.map((t) =>
+        t.live ? (
+          <li>
+            <a href={url(`library/${t.slug}/`)} aria-current={currentTopic === t.slug ? 'page' : undefined}>
+              <span class="ring" data-topic-ring={t.slug} data-sections={t.sections.map((s) => s.key).join(',')} style="--p:0">
+                <span><Icon name={t.icon} size={12} /></span>
+              </span>
+              <span class="side-topic">{t.title}</span>
+            </a>
+          </li>
+        ) : (
+          <li class="locked" title="Coming soon">
+            <span class="ring locked"><Icon name="lock" size={11} /></span>
             <span class="side-topic">{t.title}</span>
-          </a>
-        </li>
-      ) : (
-        <li class="locked" title="Coming soon">
-          <span class="ring locked"><Icon name="lock" size={13} /></span>
-          <span class="side-topic">{t.title}</span>
-          <span class="soon">soon</span>
-        </li>
-      ),
-    )}
-  </ol>
+          </li>
+        ),
+      )}
+    </ol>
+    <a href={url('about/')} aria-current={active === 'about' ? 'page' : undefined}><Icon name="user" />About</a>
+  </nav>
 
   <div class="side-bottom">
     <p class="side-label">Connect</p>
-    <nav class="side-nav">
+    <nav class="side-nav" aria-label="Elsewhere">
       {profile.linkedin && <a href={profile.linkedin} target="_blank" rel="noopener"><Icon name="linkedin" />LinkedIn</a>}
       <a href="https://github.com/ImArchanaSH/Learn_IAM" target="_blank" rel="noopener"><Icon name="github" />GitHub repo</a>
       {hasResume && <a href={url('resume.pdf')}><Icon name="file-text" />Resume</a>}

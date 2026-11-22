@@ -138,13 +138,15 @@ function paint() {
   $$('[data-topic-bar]').forEach((el) => (el.style.width = topicPct(el.dataset.topicBar!, el.dataset.sections || '') + '%'));
   $$('[data-topic-pct]').forEach((el) => (el.textContent = topicPct(el.dataset.topicPct!, el.dataset.sections || '') + '%'));
   $$('[data-ring]').forEach((el) => el.style.setProperty('--p', String(sectionPct(el.dataset.ring!))));
+  // Progress rings on cards stay hidden until there's something to show
+  $$('.mini-ring').forEach((el) => el.classList.toggle('is-zero', el.style.getPropertyValue('--p').trim() === '0'));
   $$('[data-bar]').forEach((el) => (el.style.height = Math.max(4, sectionPct(el.dataset.bar!)) + '%'));
   $$('[data-pct]').forEach((el) => (el.textContent = sectionPct(el.dataset.pct!) + '%'));
   $$('[data-done-mark]').forEach((el) => (el.hidden = !store.sections[el.dataset.doneMark!]?.done));
   $$('[data-status]').forEach((el) => {
     if (!el.dataset.minutes) el.dataset.minutes = (el.textContent || '').split('·').pop()!.trim();
     const p = sectionPct(el.dataset.status!);
-    el.textContent = p >= 100 ? 'Done ✓' : p > 0 ? `${p}% read · ${el.dataset.minutes}` : `Not started · ${el.dataset.minutes}`;
+    el.textContent = p >= 100 ? 'Done ✓' : p > 0 ? `${p}% read` : el.dataset.minutes!;
     el.classList.toggle('is-done', p >= 100);
   });
   $$('[data-overall]').forEach((el) => {
@@ -268,18 +270,32 @@ function escapeHtml(s: string) {
   return s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
 }
 
-/* ---------- Home: continue + greeting ---------- */
-const cont = $<HTMLAnchorElement>('[data-continue]');
-if (cont && store.last) {
-  cont.href = store.last.href + (store.last.heading ? '#' + store.last.heading : '');
-  const label = $('[data-continue-label]');
-  if (label) label.textContent = `Continue: ${store.last.title.replace(/^.*–\s*/, '')}`;
-  const note = $('[data-continue-note]');
-  if (note && store.last.headingText) {
-    note.textContent = `Last read: ${store.last.title} · “${store.last.headingText}”`;
-    note.hidden = false;
+/* ---------- Returning readers: continue where you left off ----------
+   Only shown once someone has started reading, so first-time visitors see a clean page. */
+const hasProgress = () => Object.values(store.sections).some((s) => s.done || s.max > 0.02);
+function paintResume() {
+  const started = hasProgress();
+  $$('[data-has-progress]').forEach((el) => (el.hidden = !started));
+  const last = store.last;
+  const lastDone = last ? !!store.sections[last.key]?.done : false;
+  const strip = $('[data-resume]');
+  if (strip) strip.hidden = !(started && last && !lastDone);
+  if (!started || !last || lastDone) return;
+  const href = last.href + (last.heading ? '#' + last.heading : '');
+  const cont = $<HTMLAnchorElement>('[data-continue]');
+  if (cont) {
+    cont.href = href;
+    const label = $('[data-continue-label]');
+    if (label) label.textContent = 'Continue reading';
   }
+  const title = $('[data-resume-title]');
+  if (title) title.textContent = last.title + (last.headingText ? ` · ${last.headingText}` : '');
+  const link = $<HTMLAnchorElement>('[data-resume-link]');
+  if (link) link.href = href;
 }
+paintResume();
+
+// Greeting on the Home profile card, from the visitor's own clock
 const greet = $('[data-greeting]');
 if (greet) {
   const h = new Date().getHours();
@@ -291,13 +307,13 @@ $('[data-reset-progress]')?.addEventListener('click', () => {
   store = { sections: {} };
   save(PROGRESS_KEY, store);
   paint();
+  paintResume();
   toast('Your reading progress was cleared.');
 });
 
-/* ---------- Topic row scroller ---------- */
-const scroller = $('[data-scroller]');
-$$<HTMLButtonElement>('[data-scroll]').forEach((b) =>
-  b.addEventListener('click', () => scroller?.scrollBy({ left: Number(b.dataset.scroll) * (scroller.clientWidth * 0.8), behavior: 'smooth' })),
+/* ---------- "On this page" box (narrow screens): close it after picking a heading ---------- */
+$$<HTMLDetailsElement>('.toc-box').forEach((box) =>
+  $$('a', box).forEach((a) => a.addEventListener('click', () => (box.open = false))),
 );
 
 /* ---------- Mobile menu ---------- */

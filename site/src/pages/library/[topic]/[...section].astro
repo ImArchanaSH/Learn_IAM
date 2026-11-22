@@ -3,8 +3,9 @@
 //   /library/01-identity/             -> notes.md
 //   /library/01-identity/governance/  -> governance.md
 //   /library/01-identity/labs/        -> labs.md
-// The right panel shows "On this page" (highlights where you are and ticks what you've read),
-// your progress in this section, and a "Mark as done" button.
+// On wide screens the right panel shows "On this page" (highlights where you are and ticks what
+// you've read). On narrower screens the same list folds into an "On this page" box above the text,
+// so the reading column keeps its width. Progress shows once, in the banner.
 import { getCollection, render } from 'astro:content';
 import Base from '../../../layouts/Base.astro';
 import Icon from '../../../components/Icon.astro';
@@ -24,25 +25,28 @@ export async function getStaticPaths() {
 const { topic, section, prev, next } = Astro.props;
 const entry = byFile(await getCollection('sections'), `${topic.folder}/${section.key}.md`)!;
 const { Content, headings } = await render(entry);
-const toc = headings.filter((h) => h.depth === 2 && !/^topic \d+:/i.test(h.text));
+const toc = headings.filter((h) => h.depth === 2 && !/^topic \d+\s*:/i.test(h.text));
+const sectionKeys = topic.sections.map((s) => s.key).join(',');
+const meta = [topic.tag, `~${topic.minutes} min`, topic.updated && `Updated ${topic.updated}`].filter(Boolean).join(' · ');
+const pagerLabel = (item: typeof prev) => (item!.topic.slug === topic.slug ? item!.section.label : `${item!.topic.title}: ${item!.section.label}`);
 ---
-<Base title={`${topic.title} – ${section.label}`} description={topic.summary} active="library" currentTopic={topic.slug} pageKey={section.progressKey}>
+<Base title={`${topic.title} – ${section.label}`} description={topic.summary} active="path" currentTopic={topic.slug} pageKey={section.progressKey}>
   <div class="topic-layout">
     <div class="topic-main">
       <nav class="crumbs" aria-label="Breadcrumb">
-        <a href={url('library/')}>Library</a><Icon name="chevron-right" size={14} />
-        <a href={url(`library/${topic.slug}/`)}>Topic {topic.number}</a><Icon name="chevron-right" size={14} />
+        <a href={url('library/')}>Learning path</a><Icon name="chevron-right" size={14} />
+        <a href={url(`library/${topic.slug}/`)}>{topic.title}</a><Icon name="chevron-right" size={14} />
         <span aria-current="page">{section.label}</span>
       </nav>
 
       <header class="topic-banner">
         <span class="topic-banner-icon" aria-hidden="true"><Icon name={topic.icon} size={30} /></span>
         <div>
-          <p class="eyebrow">Topic {topic.number}{topic.week ? ` · Week ${topic.week}` : ''}{topic.tag ? ` · ${topic.tag}` : ''}</p>
+          <p class="eyebrow">{meta}</p>
           <h1>{topic.title}</h1>
           <div class="topic-bar">
-            <span class="bar light"><span data-topic-bar={topic.slug} data-sections={topic.sections.map((s) => s.key).join(',')}></span></span>
-            <small><b data-topic-pct={topic.slug} data-sections={topic.sections.map((s) => s.key).join(',')}>0%</b> of this topic read</small>
+            <span class="bar light"><span data-topic-bar={topic.slug} data-sections={sectionKeys}></span></span>
+            <small><b data-topic-pct={topic.slug} data-sections={sectionKeys}>0%</b> of this topic read</small>
           </div>
         </div>
       </header>
@@ -52,11 +56,22 @@ const toc = headings.filter((h) => h.depth === 2 && !/^topic \d+:/i.test(h.text)
           <a href={s.href} aria-current={s.key === section.key ? 'page' : undefined}>
             <Icon name={s.icon} size={18} />
             <span>{s.label}</span>
-            <small>{s.minutes} min</small>
+            <small>· {s.minutes} min</small>
             <span class="seg-check" data-done-mark={s.progressKey} hidden><Icon name="circle-check-big" size={16} /></span>
           </a>
         ))}
       </nav>
+
+      {toc.length > 0 && (
+        <details class="toc-box card">
+          <summary><Icon name="list" size={18} />On this page</summary>
+          <ol class="toc">
+            {toc.map((h) => (
+              <li><a href={`#${h.slug}`}><span class="toc-dot"></span>{h.text}</a></li>
+            ))}
+          </ol>
+        </details>
+      )}
 
       <article class="card prose" data-article>
         <Content />
@@ -75,12 +90,12 @@ const toc = headings.filter((h) => h.depth === 2 && !/^topic \d+:/i.test(h.text)
       <nav class="pager" aria-label="Previous and next">
         {prev ? (
           <a class="pager-link" href={prev.section.href}>
-            <Icon name="arrow-left" /><span><small>Previous</small><b>{prev.topic.slug === topic.slug ? prev.section.label : `Topic ${prev.topic.number}: ${prev.section.label}`}</b></span>
+            <Icon name="arrow-left" /><span><small>Previous</small><b>{pagerLabel(prev)}</b></span>
           </a>
         ) : <span></span>}
         {next ? (
           <a class="pager-link next" href={next.section.href}>
-            <span><small>Next</small><b>{next.topic.slug === topic.slug ? next.section.label : `Topic ${next.topic.number}: ${next.section.label}`}</b></span><Icon name="arrow-right" />
+            <span><small>Next</small><b>{pagerLabel(next)}</b></span><Icon name="arrow-right" />
           </a>
         ) : <span></span>}
       </nav>
@@ -89,7 +104,7 @@ const toc = headings.filter((h) => h.depth === 2 && !/^topic \d+:/i.test(h.text)
     <aside class="topic-side">
       <div class="card side-card">
         <div class="side-progress">
-          <span class="big-ring small" data-ring-page style="--p:0"><b>0%</b></span>
+          <span class={`glance-icon k-${section.key}`}><Icon name={section.icon} /></span>
           <div><b>{section.label}</b><p class="muted">{section.minutes} min read</p></div>
         </div>
         {toc.length > 0 && (

@@ -1,49 +1,86 @@
 ---
-// Library: every topic with its three sections and the reader's progress.
+// Learning path: every topic in order as a timeline, each live topic with its three sections
+// and the reader's progress, then the study companions. (The URL stays /library/ so old links work.)
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
-import { getLearningPath } from '../../lib/site';
+import { getLearningPath, getResources } from '../../lib/site';
 const topics = await getLearningPath();
+const resources = getResources();
+const resIcon = (type?: string) =>
+  type === 'Book' ? 'book-marked' : type === 'Labs' ? 'flask-conical' : type === 'Exam' ? 'graduation-cap' : 'compass';
 ---
-<Base title="Library" active="library">
+<Base title="Learning path" active="path">
   <div class="page">
     <header class="page-head">
-      <p class="eyebrow">Library</p>
-      <h1>All topics</h1>
-      <p class="muted">Each topic has three parts. Notes explain how it works, governance covers what can go wrong and how it's controlled, and labs work through real scenarios.</p>
+      <p class="eyebrow">Learning path</p>
+      <h1>From identity basics to IAM assurance</h1>
+      <p class="muted">Topics build on each other, so they're best read in order. Each one has three parts: Notes explain how it works, Governance covers what the organisation has to manage, and Labs apply both to a realistic scenario.</p>
     </header>
-    <div class="lib-list">
-      {topics.map((t) =>
+
+    <ol class="timeline">
+      {topics.map((t, i) =>
         t.live ? (
-          <section class="card lib-item">
-            <div class="lib-head">
-              <span class="topic-banner-icon" aria-hidden="true"><Icon name={t.icon} size={26} /></span>
-              <div class="lib-title">
-                <p class="eyebrow">Topic {t.number}{t.tag ? ` · ${t.tag}` : ''} · ~{t.minutes} min</p>
-                <h2>{t.title}</h2>
-                {t.summary && <p class="muted">{t.summary}</p>}
+          <li class="tl-item">
+            <span class="tl-step" aria-hidden="true">{i + 1}</span>
+            <section class="card tl-card">
+              <div class="lib-head">
+                <span class="topic-banner-icon" aria-hidden="true"><Icon name={t.icon} size={26} /></span>
+                <div class="lib-title">
+                  <p class="eyebrow">{[t.tag, `~${t.minutes} min`, t.updated && `Updated ${t.updated}`].filter(Boolean).join(' · ')}</p>
+                  <h2><a href={t.sections[0]?.href}>{t.title}</a></h2>
+                  {t.summary && <p class="muted">{t.summary}</p>}
+                </div>
+                <span class="mini-ring lg" data-topic-ring={t.slug} data-sections={t.sections.map((s) => s.key).join(',')} style="--p:0" title="Your progress"></span>
               </div>
-              <span class="mini-ring lg" data-topic-ring={t.slug} data-sections={t.sections.map((s) => s.key).join(',')} style="--p:0"></span>
-            </div>
-            <div class="glance">
-              {t.sections.map((s) => (
-                <a class="glance-card" href={s.href}>
-                  <span class={`glance-icon k-${s.key}`}><Icon name={s.icon} /></span>
-                  <span class="glance-text"><small data-status={s.progressKey}>Not started · {s.minutes} min</small><b>{s.label}</b></span>
-                  <span class="mini-ring" data-ring={s.progressKey} style="--p:0"></span>
-                </a>
-              ))}
-            </div>
-          </section>
+              <div class="glance">
+                {t.sections.map((s) => (
+                  <a class="glance-card" href={s.href}>
+                    <span class={`glance-icon k-${s.key}`}><Icon name={s.icon} /></span>
+                    <span class="glance-text"><b>{s.label}</b><small data-status={s.progressKey}>{s.minutes} min</small></span>
+                    <span class="mini-ring" data-ring={s.progressKey} style="--p:0"></span>
+                  </a>
+                ))}
+              </div>
+            </section>
+          </li>
         ) : (
-          <section class="card lib-item soon">
-            <div class="lib-head">
-              <span class="topic-banner-icon muted-icon" aria-hidden="true"><Icon name="lock" size={22} /></span>
-              <div class="lib-title"><p class="eyebrow">Topic {t.number} · coming soon</p><h2>{t.title}</h2></div>
+          <li class="tl-item soon">
+            <span class="tl-step" aria-hidden="true">{i + 1}</span>
+            <div class="tl-soon">
+              <b>{t.title}</b>
+              <span class="tag muted">Coming soon</span>
             </div>
-          </section>
+          </li>
         ),
       )}
-    </div>
+    </ol>
+
+    {resources.length > 0 && (
+      <section aria-labelledby="companions">
+        <div class="row-head">
+          <h2 id="companions">Study companions</h2>
+        </div>
+        <p class="muted section-lead">What I read alongside each topic.</p>
+        <div class="card table-card">
+          <table class="res-table">
+            <thead><tr><th>Resource</th><th>Type</th><th>Used for</th><th><span class="sr-only">Link</span></th></tr></thead>
+            <tbody>
+              {resources.map((r) => (
+                <tr>
+                  <td><span class="res-name"><span class="res-icon"><Icon name={resIcon(r.type)} size={18} /></span>{r.name}</span></td>
+                  <td><span class="tag">{r.type}</span></td>
+                  <td class="muted">{r.use}</td>
+                  <td>{r.url ? <a class="pill-link" href={r.url} target="_blank" rel="noopener">Open <Icon name="arrow-up-right" size={14} /></a> : <span class="muted small">Not online</span>}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    )}
+
+    <p class="reset-row" data-has-progress hidden>
+      <button class="text-btn" type="button" data-reset-progress><Icon name="rotate-ccw" size={15} />Clear my reading progress</button>
+    </p>
   </div>
 </Base>
