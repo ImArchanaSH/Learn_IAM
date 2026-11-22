@@ -2,6 +2,7 @@
 // and works out which topic sections exist and how long each takes to read.
 import fs from 'node:fs';
 import path from 'node:path';
+import { execFileSync } from 'node:child_process';
 import { parse } from 'yaml';
 import { getCollection } from 'astro:content';
 
@@ -12,9 +13,9 @@ export const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BAS
 export const url = (p = '') => base + p.replace(/^\//, '');
 
 export const SECTIONS = [
-  { key: 'notes', label: 'Notes', icon: 'book-open', blurb: 'How it works' },
-  { key: 'governance', label: 'Governance', icon: 'shield-check', blurb: 'What can go wrong and how it is controlled' },
-  { key: 'labs', label: 'Labs', icon: 'flask-conical', blurb: 'Scenarios worked through' },
+  { key: 'notes', label: 'Notes', icon: 'book-open', blurb: 'How it works: the concepts, the components and how they connect.' },
+  { key: 'governance', label: 'Governance', icon: 'shield-check', blurb: 'What the organisation has to manage: risks, ownership and oversight.' },
+  { key: 'labs', label: 'Labs', icon: 'flask-conical', blurb: 'Applying both to a realistic scenario, with the working shown.' },
 ] as const;
 export type SectionKey = (typeof SECTIONS)[number]['key'];
 
@@ -32,6 +33,8 @@ export type Topic = {
   live: boolean;
   sections: Section[];
   minutes: number;
+  updated?: string; // e.g. "21 Nov 2026"
+  lab?: { title: string; meta?: string; question?: string };
 };
 
 function readYaml(file: string) {
@@ -52,6 +55,40 @@ export function readingMinutes(body = '') {
   return Math.max(1, Math.round(words / 200));
 }
 
+// "Last updated" for a topic: topic.yml `updated:` if given, otherwise the date of the last
+// git commit that touched the topic folder (the deploy workflow fetches full history for this),
+// otherwise the newest file date in the folder.
+function lastUpdated(folder: string, override?: string | Date) {
+  let d: Date | undefined;
+  if (override) d = new Date(override);
+  if (!d || isNaN(+d)) {
+    try {
+      const out = execFileSync('git', ['log', '-1', '--format=%cI', '--', folder], { cwd: ROOT, encoding: 'utf8' }).trim();
+      if (out) d = new Date(out);
+    } catch {
+      /* not a git checkout */
+    }
+  }
+  if (!d || isNaN(+d)) {
+    const dir = path.join(ROOT, folder);
+    const times = fs.existsSync(dir) ? fs.readdirSync(dir).map((f) => fs.statSync(path.join(dir, f)).mtimeMs) : [];
+    if (times.length) d = new Date(Math.max(...times));
+  }
+  return d ? d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'Australia/Sydney' }) : undefined;
+}
+
+// The lab's name and description, read from the top of labs.md:
+//   **Understanding XYZ's identity landscape**   -> title
+//   **Type:** Scenario ... · **Level:** ...       -> meta
+//   > "Can we explain ...?"                       -> question (the first quote)
+function labInfo(body = '') {
+  const lines = body.replace(/<!--[\s\S]*?-->/g, '').split(/\r?\n/).map((l) => l.trim());
+  const title = lines.find((l) => /^\*\*[^*:]+\*\*$/.test(l))?.replace(/\*/g, '');
+  const meta = lines.find((l) => /^\*\*Type:\*\*/.test(l))?.replace(/\*/g, '');
+  const question = lines.find((l) => l.startsWith('> '))?.slice(2).replace(/[*_]/g, '').replace(/^["“]|["”]$/g, '');
+  return title ? { title, meta, question } : undefined;
+}
+
 export const sectionHref = (slug: string, key: string) => url(`library/${slug}/${key === 'notes' ? '' : key + '/'}`);
 
 export async function getLearningPath(): Promise<Topic[]> {
@@ -66,6 +103,7 @@ export async function getLearningPath(): Promise<Topic[]> {
       if (!entry) return [];
       return [{ ...s, href: sectionHref(item.slug, s.key), minutes: readingMinutes(entry.body), progressKey: `${item.slug}/${s.key}` }];
     });
+    const labs = byFile(entries, `${item.folder}/labs.md`);
     return {
       slug: item.slug,
       folder: item.folder,
@@ -79,11 +117,14 @@ export async function getLearningPath(): Promise<Topic[]> {
       live: true,
       sections,
       minutes: sections.reduce((n, s) => n + s.minutes, 0),
+      updated: lastUpdated(item.folder, t.updated),
+      lab: labs ? labInfo(labs.body) : undefined,
     };
   });
 }
 
-// How much of the series is built (from each topic.yml status), shown around the profile picture
+// How much of the series is built (from each topic.yml status), shown around the profile picture.
+// Topics still to come count as 0, in-progress as half, complete as whole.
 export function seriesPercent(topics: Topic[]) {
   if (!topics.length) return 0;
   const done = topics.filter((t) => t.status === 'complete').length;

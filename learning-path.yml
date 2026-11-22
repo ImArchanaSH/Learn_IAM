@@ -3,6 +3,10 @@
 # A topic without "folder" shows as "soon".
 - slug: 01-identity
   folder: 01-foundations/01-identity
+- title: Identity lifecycle, identifiers and proofing
 - title: Authentication and MFA
-- title: Authorisation
+- title: Authorisation and access control
+- title: Privileged access management
+- title: Non-human identities
+- title: Identity governance and administration
 

@@ -308,16 +308,17 @@ The 6 components don't work in isolation. HR data feeds the store, the store dri
 
 ## References
 
-- ISO/IEC 24760-1:2019 (Edition 2), *IT Security and Privacy – A framework for identity management – Part 1: Terminology and concepts*, with Amendment 1:2023. Freely available from the [ISO Publicly Available Standards](https://standards.iso.org/ittf/PubliclyAvailableStandards/) page.
-- NIST SP 800-63-4, *Digital Identity Guidelines* (2025), for authenticator, credential and phishing-resistance terminology. https://pages.nist.gov/800-63-4/
-- NIST SP 800-162, *Guide to Attribute Based Access Control (ABAC) Definition and Considerations* (2014, updated 2019). https://csrc.nist.gov/pubs/sp/800/162/upd2/final
-- ANSI INCITS 359-2012, *Role Based Access Control*.
-- IETF RFC 7643 and RFC 7644, *System for Cross-domain Identity Management (SCIM)* (2015).
-- OWASP Top 10:2025, A01:2025 Broken Access Control. https://owasp.org/Top10/2025/
-- Microsoft Learn, *Microsoft Entra data retention*. https://learn.microsoft.com/entra/identity/monitoring-health/reference-reports-data-retention
-- Microsoft Learn, *What is Microsoft Entra Privileged Identity Management?* https://learn.microsoft.com/entra/id-governance/privileged-identity-management/pim-configure
-- Microsoft Learn, *Securing privileged access*. https://learn.microsoft.com/security/privileged-access-workstations/overview
-- [IDPro Body of Knowledge](https://idpro.org/body-of-knowledge/)
-- [Awesome IAM Labs](https://blog.ansari.solutions/)
-- Abbas Kudrati, *Identity and Access Management Exam Prep Guide* (2026)
-- Privacy and framework sources are listed in governance.md.
+- Arif, K. (n.d.). *Awesome IAM labs*. Retrieved November 19, 2026, from https://blog.ansari.solutions/
+- Hu, V. C., Ferraiolo, D., Kuhn, R., Schnitzer, A., Sandlin, K., Miller, R., & Scarfone, K. (2014). *Guide to attribute based access control (ABAC) definition and considerations* (NIST Special Publication 800-162, includes updates as of August 2, 2019). National Institute of Standards and Technology. https://doi.org/10.6028/NIST.SP.800-162
+- Hunt, P., Grizzle, K., Ansari, M., Wahlstroem, E., & Mortimore, C. (2015). *System for Cross-domain Identity Management: Protocol* (RFC 7644). RFC Editor. https://doi.org/10.17487/RFC7644
+- Hunt, P., Grizzle, K., Wahlstroem, E., & Mortimore, C. (2015). *System for Cross-domain Identity Management: Core schema* (RFC 7643). RFC Editor. https://doi.org/10.17487/RFC7643
+- IDPro. (n.d.). *IDPro Body of Knowledge*. Retrieved November 19, 2026, from https://idpro.org/body-of-knowledge/
+- InterNational Committee for Information Technology Standards. (2012). *Information technology – Role based access control* (ANSI INCITS 359-2012). American National Standards Institute.
+- International Organization for Standardization & International Electrotechnical Commission. (2025). *Information security, cybersecurity and privacy protection – A framework for identity management – Part 1: Core concepts and terminology* (ISO/IEC 24760-1:2025). https://www.iso.org/standard/87485.html
+- Kudrati, A. (2026). *Identity and access management exam prep guide: Master the CIDPRO certification*. [Publisher].
+- Microsoft. (n.d.-a). *Microsoft Entra data retention*. Microsoft Learn. Retrieved November 19, 2026, from https://learn.microsoft.com/entra/identity/monitoring-health/reference-reports-data-retention
+- Microsoft. (n.d.-b). *Securing privileged access*. Microsoft Learn. Retrieved November 19, 2026, from https://learn.microsoft.com/security/privileged-access-workstations/overview
+- Microsoft. (n.d.-c). *What is Microsoft Entra Privileged Identity Management?* Microsoft Learn. Retrieved November 19, 2026, from https://learn.microsoft.com/entra/id-governance/privileged-identity-management/pim-configure
+- OWASP Foundation. (2025). *OWASP Top 10:2025*. https://owasp.org/Top10/2025/
+- Temoshok, D., Proud-Madruga, D., Choong, Y.-Y., Galluzzo, R., Gupta, S., LaSalle, C., Lefkovitz, N., & Regenscheid, A. (2025). *Digital identity guidelines* (NIST Special Publication 800-63-4). National Institute of Standards and Technology. https://doi.org/10.6028/NIST.SP.800-63-4
+

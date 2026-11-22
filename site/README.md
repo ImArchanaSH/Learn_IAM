@@ -9,10 +9,11 @@ Live site: https://imarchanash.github.io/Learn_IAM/
 | Part of the site | File (in the repo root) |
 | --- | --- |
 | Name, headline, LinkedIn and GitHub buttons, banner text | `profile.yml` |
-| About me / What I'm building (Home) | `pages/home.md` |
-| Study companions table (Home) | `resources.yml` |
+| Short intro in the Home banner (two or three sentences) | `pages/home.md` |
+| Study companions table (Learning path page) | `resources.yml` |
 | Learning path order and "soon" topics | `learning-path.yml` |
-| Topic title, summary, tag, icon, status | `<topic folder>/topic.yml` |
+| Topic title, summary, tag, icon, status, optional `updated` date | `<topic folder>/topic.yml` |
+| Featured lab on Home (title, "Type" line, first quote) | top of the newest topic's `labs.md` |
 | Notes / Governance / Labs | `<topic folder>/notes.md`, `governance.md`, `labs.md` |
 | About page | `pages/about.md` |
 | Resume link in the sidebar | appears when `site/public/resume.pdf` exists |
@@ -22,8 +23,10 @@ Topic icons are names from https://lucide.dev/icons (for example `fingerprint`, 
 
 ## Features for readers
 
-- **Reading progress** is saved in each reader's own browser (nothing is sent anywhere). It drives the progress rings in the sidebar, the bars on topic cards, and the "Your reading" chart on Home.
-- **Continue where you left off:** the Home banner button jumps to the last section and heading read. Topic pages offer "Jump there".
+- **Reading progress** is saved in each reader's own browser (nothing is sent anywhere). It drives the progress rings in the sidebar and on the Learning path. Rings stay hidden until a reader has started, so first-time visitors don't see empty progress.
+- **Continue where you left off:** once someone has started reading, Home shows a "Pick up where you left off" strip and the banner button becomes "Continue reading". Topic pages offer "Jump there".
+- **Updated dates:** each topic shows when it last changed, from the last git commit to its folder (the deploy workflow fetches full history for this). Set `updated:` in topic.yml to override.
+- **Wide reading column:** the "On this page" panel sits on the right only on wide screens; otherwise it folds into a box above the text.
 - **On this page** highlights the current heading and ticks the ones already passed.
 - **Mark as done** on every section, with Previous / Next buttons.
 - **Search** across all topics and headings (press `/`).
@@ -53,8 +56,8 @@ Topic icons are names from https://lucide.dev/icons (for example `fingerprint`, 
 | `src/lib/interactive.ts` | Browser code: progress, continue, search, theme, text size, quiz, diagrams |
 | `src/layouts/Base.astro` | App frame: sidebar, top bar, footer |
 | `src/components/` | Sidebar, Icon (Lucide icons), Logo, MdPage |
-| `src/pages/index.astro` | Home dashboard |
-| `src/pages/library/` | Library list and the topic pages (`[topic]/[...section].astro`) |
+| `src/pages/index.astro` | Home: intro, how each topic works, learning path preview, featured lab |
+| `src/pages/library/` | Learning path page (`index.astro`, URL stays /library/) and the topic pages (`[topic]/[...section].astro`) |
 | `src/pages/library/[topic]/labs/lab-data/[file].ts` | Publishes each topic's `lab-data/` files for download, plus `lab-files.zip` |
 | `src/lib/zip.ts` | Makes the "Download all files" zip (no extra package needed) |
 | `src/pages/search.json.ts` | Builds the search index |
